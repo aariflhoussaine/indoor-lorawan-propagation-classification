@@ -1,0 +1,439 @@
+[
+    {
+        "id": "a4647c626e2147c4",
+        "type": "mqtt in",
+        "z": "b538036873358cf0",
+        "name": "",
+        "topic": "v3/datacollect@ttn/devices/noeud1/up",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "b8f07e9a8d71e466",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 470,
+        "y": 580,
+        "wires": [
+            [
+                "8378382df1cb4e88"
+            ]
+        ]
+    },
+    {
+        "id": "8378382df1cb4e88",
+        "type": "function",
+        "z": "b538036873358cf0",
+        "name": "function 1",
+        "func": "\nlet p = msg.payload || {};\nlet up = p.uplink_message || {};\nlet set = up.settings || {};\nlet dr = set.data_rate?.lora || {};\nlet rx = up.rx_metadata?.[0] || {};\n\n\nlet device_id = (p.end_device_ids?.device_id ?? '').toString();\nlet f_port = (up.f_port ?? '').toString();\nlet frm_payload = (up.frm_payload ?? '').toString();\nlet bandwidth = (dr.bandwidth ?? '').toString();\nlet spreading_factor = (dr.spreading_factor ?? '').toString();\nlet coding_rate = (dr.coding_rate ?? '').toString();\nlet frequency = (set.frequency ?? '').toString();\nlet dr_timestamp = (set.timestamp ?? '').toString();\nlet dr_time = (set.time ?? '').toString();\nlet airtime = (up.consumed_airtime ?? '').toString();\nlet gw_id = (rx.gateway_ids?.gateway_id ?? '').toString();\nlet rssi = (rx.rssi ?? '').toString();\nlet channel_rssi = (rx.channel_rssi ?? '').toString();\nlet snr = (rx.snr ?? '').toString();\nlet frequency_offset = (rx.frequency_offset ?? '').toString();\nlet channel_index = (rx.channel_index ?? '').toString();\nlet qos = (msg.qos ?? '').toString();   // “confirmed” used here as QoS\n\nif (!context.get('header_written')) {\n  const header = [\n    'device_id', 'f_port', 'frm_payload',\n    'bandwidth', 'spreading_factor', 'coding_rate', 'frequency',\n    'dr_timestamp', 'dr_time', 'airtime',\n    'gw_id', 'rssi', 'channel_rssi', 'snr',\n    'frequency_offset', 'channel_index', 'qos'\n  ].join(';') + '\\n';\n  node.send({ payload: header });\n  context.set('header_written', true);\n}\n\n\nmsg.payload = [\n  device_id, f_port, frm_payload,\n  bandwidth, spreading_factor, coding_rate, frequency,\n  dr_timestamp, dr_time, airtime,\n  gw_id, rssi, channel_rssi, snr,\n  frequency_offset, channel_index, qos\n].join(';') + '\\n';\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 580,
+        "wires": [
+            [
+                "77766129a704a37b"
+            ]
+        ]
+    },
+    {
+        "id": "77766129a704a37b",
+        "type": "file",
+        "z": "b538036873358cf0",
+        "name": "",
+        "filename": "C:/Users/hp/OneDrive/Metadata/Bureau/data/Node1_UP_NLOS.csv",
+        "filenameType": "str",
+        "appendNewline": false,
+        "createDir": false,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 1340,
+        "y": 580,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5d1dab3cfc41a8f6",
+        "type": "mqtt in",
+        "z": "b538036873358cf0",
+        "name": "",
+        "topic": "v3/datacollect@ttn/devices/noeud2/up",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "b8f07e9a8d71e466",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 470,
+        "y": 640,
+        "wires": [
+            [
+                "5dbf243d341a8ba7"
+            ]
+        ]
+    },
+    {
+        "id": "48bc387eb851d6ee",
+        "type": "mqtt in",
+        "z": "b538036873358cf0",
+        "name": "",
+        "topic": "v3/datacollect@ttn/devices/noeud3/up",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "b8f07e9a8d71e466",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 470,
+        "y": 700,
+        "wires": [
+            [
+                "3bfba8fed8229401"
+            ]
+        ]
+    },
+    {
+        "id": "0805927bd6807469",
+        "type": "mqtt in",
+        "z": "b538036873358cf0",
+        "name": "",
+        "topic": "v3/datacollect@ttn/devices/noeud4/up",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "b8f07e9a8d71e466",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 470,
+        "y": 760,
+        "wires": [
+            [
+                "285694194ea758f4"
+            ]
+        ]
+    },
+    {
+        "id": "5dbf243d341a8ba7",
+        "type": "function",
+        "z": "b538036873358cf0",
+        "name": "function 2",
+        "func": "\nlet p  = msg.payload            || {};\nlet up = p.uplink_message       || {};\nlet set= up.settings            || {};\nlet dr = set.data_rate?.lora    || {};\nlet rx = up.rx_metadata?.[0]    || {};\n\n\nlet device_id        = (p.end_device_ids?.device_id        ?? '').toString();\nlet f_port           = (up.f_port                          ?? '').toString();\nlet frm_payload      = (up.frm_payload                     ?? '').toString();\nlet bandwidth        = (dr.bandwidth                       ?? '').toString();\nlet spreading_factor = (dr.spreading_factor                ?? '').toString();\nlet coding_rate      = (dr.coding_rate                     ?? '').toString();\nlet frequency        = (set.frequency                      ?? '').toString();\nlet dr_timestamp     = (set.timestamp                      ?? '').toString();\nlet dr_time          = (set.time                           ?? '').toString();\nlet airtime          = (up.consumed_airtime                ?? '').toString();\nlet gw_id            = (rx.gateway_ids?.gateway_id         ?? '').toString();\nlet rssi             = (rx.rssi                            ?? '').toString();\nlet channel_rssi     = (rx.channel_rssi                    ?? '').toString();\nlet snr              = (rx.snr                             ?? '').toString();\nlet frequency_offset = (rx.frequency_offset                ?? '').toString();\nlet channel_index    = (rx.channel_index                   ?? '').toString();\nlet qos              = (msg.qos                     ?? '').toString();   // “confirmed” used here as QoS\n\nif (!context.get('header_written')) {\n    const header = [\n        'device_id','f_port','frm_payload',\n        'bandwidth','spreading_factor','coding_rate','frequency',\n        'dr_timestamp','dr_time','airtime',\n        'gw_id','rssi','channel_rssi','snr',\n        'frequency_offset','channel_index','qos'\n    ].join(';') + '\\n';\n    node.send({payload: header});\n    context.set('header_written', true);\n}\n\n\nmsg.payload = [\n    device_id, f_port, frm_payload,\n    bandwidth, spreading_factor, coding_rate, frequency,\n    dr_timestamp, dr_time, airtime,\n    gw_id, rssi, channel_rssi, snr,\n    frequency_offset, channel_index, qos\n].join(';') + '\\n';\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 640,
+        "wires": [
+            [
+                "066728b901c8caab"
+            ]
+        ]
+    },
+    {
+        "id": "066728b901c8caab",
+        "type": "file",
+        "z": "b538036873358cf0",
+        "name": "",
+        "filename": "C:/Users/hp/OneDrive/Metadata/Bureau/data/Node2_UP_NLOS.csv",
+        "filenameType": "str",
+        "appendNewline": false,
+        "createDir": false,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 1340,
+        "y": 640,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3bfba8fed8229401",
+        "type": "function",
+        "z": "b538036873358cf0",
+        "name": "function 3",
+        "func": "\nlet p  = msg.payload            || {};\nlet up = p.uplink_message       || {};\nlet set= up.settings            || {};\nlet dr = set.data_rate?.lora    || {};\nlet rx = up.rx_metadata?.[0]    || {};\n\n\nlet device_id        = (p.end_device_ids?.device_id        ?? '').toString();\nlet f_port           = (up.f_port                          ?? '').toString();\nlet frm_payload      = (up.frm_payload                     ?? '').toString();\nlet bandwidth        = (dr.bandwidth                       ?? '').toString();\nlet spreading_factor = (dr.spreading_factor                ?? '').toString();\nlet coding_rate      = (dr.coding_rate                     ?? '').toString();\nlet frequency        = (set.frequency                      ?? '').toString();\nlet dr_timestamp     = (set.timestamp                      ?? '').toString();\nlet dr_time          = (set.time                           ?? '').toString();\nlet airtime          = (up.consumed_airtime                ?? '').toString();\nlet gw_id            = (rx.gateway_ids?.gateway_id         ?? '').toString();\nlet rssi             = (rx.rssi                            ?? '').toString();\nlet channel_rssi     = (rx.channel_rssi                    ?? '').toString();\nlet snr              = (rx.snr                             ?? '').toString();\nlet frequency_offset = (rx.frequency_offset                ?? '').toString();\nlet channel_index    = (rx.channel_index                   ?? '').toString();\nlet qos              = (msg.qos                     ?? '').toString();   // “confirmed” used here as QoS\n\nif (!context.get('header_written')) {\n    const header = [\n        'device_id','f_port','frm_payload',\n        'bandwidth','spreading_factor','coding_rate','frequency',\n        'dr_timestamp','dr_time','airtime',\n        'gw_id','rssi','channel_rssi','snr',\n        'frequency_offset','channel_index','qos'\n    ].join(';') + '\\n';\n    node.send({payload: header});\n    context.set('header_written', true);\n}\n\n\nmsg.payload = [\n    device_id, f_port, frm_payload,\n    bandwidth, spreading_factor, coding_rate, frequency,\n    dr_timestamp, dr_time, airtime,\n    gw_id, rssi, channel_rssi, snr,\n    frequency_offset, channel_index, qos\n].join(';') + '\\n';\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 700,
+        "wires": [
+            [
+                "d1b53d38190e4b50"
+            ]
+        ]
+    },
+    {
+        "id": "d1b53d38190e4b50",
+        "type": "file",
+        "z": "b538036873358cf0",
+        "name": "",
+        "filename": "C:/Users/hp/OneDrive/Metadata/Bureau/data/Node3_UP_NLOS.csv",
+        "filenameType": "str",
+        "appendNewline": false,
+        "createDir": false,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 1340,
+        "y": 700,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "285694194ea758f4",
+        "type": "function",
+        "z": "b538036873358cf0",
+        "name": "function 4",
+        "func": "\nlet p  = msg.payload            || {};\nlet up = p.uplink_message       || {};\nlet set= up.settings            || {};\nlet dr = set.data_rate?.lora    || {};\nlet rx = up.rx_metadata?.[0]    || {};\n\n\nlet device_id        = (p.end_device_ids?.device_id        ?? '').toString();\nlet f_port           = (up.f_port                          ?? '').toString();\nlet frm_payload      = (up.frm_payload                     ?? '').toString();\nlet bandwidth        = (dr.bandwidth                       ?? '').toString();\nlet spreading_factor = (dr.spreading_factor                ?? '').toString();\nlet coding_rate      = (dr.coding_rate                     ?? '').toString();\nlet frequency        = (set.frequency                      ?? '').toString();\nlet dr_timestamp     = (set.timestamp                      ?? '').toString();\nlet dr_time          = (set.time                           ?? '').toString();\nlet airtime          = (up.consumed_airtime                ?? '').toString();\nlet gw_id            = (rx.gateway_ids?.gateway_id         ?? '').toString();\nlet rssi             = (rx.rssi                            ?? '').toString();\nlet channel_rssi     = (rx.channel_rssi                    ?? '').toString();\nlet snr              = (rx.snr                             ?? '').toString();\nlet frequency_offset = (rx.frequency_offset                ?? '').toString();\nlet channel_index    = (rx.channel_index                   ?? '').toString();\nlet qos              = (msg.qos                     ?? '').toString();   // “confirmed” used here as QoS\n\nif (!context.get('header_written')) {\n    const header = [\n        'device_id','f_port','frm_payload',\n        'bandwidth','spreading_factor','coding_rate','frequency',\n        'dr_timestamp','dr_time','airtime',\n        'gw_id','rssi','channel_rssi','snr',\n        'frequency_offset','channel_index','qos'\n    ].join(';') + '\\n';\n    node.send({payload: header});\n    context.set('header_written', true);\n}\n\n\nmsg.payload = [\n    device_id, f_port, frm_payload,\n    bandwidth, spreading_factor, coding_rate, frequency,\n    dr_timestamp, dr_time, airtime,\n    gw_id, rssi, channel_rssi, snr,\n    frequency_offset, channel_index, qos\n].join(';') + '\\n';\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 760,
+        "wires": [
+            [
+                "e3daab7ecca9bcd2"
+            ]
+        ]
+    },
+    {
+        "id": "e3daab7ecca9bcd2",
+        "type": "file",
+        "z": "b538036873358cf0",
+        "name": "",
+        "filename": "C:/Users/hp/OneDrive/Metadata/Bureau/data/Node4_UP_NLOS.csv",
+        "filenameType": "str",
+        "appendNewline": false,
+        "createDir": false,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 1340,
+        "y": 760,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6f55079f5024626d",
+        "type": "mqtt in",
+        "z": "b538036873358cf0",
+        "name": "",
+        "topic": "v3/datacollect@ttn/devices/noeud5/up",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "b8f07e9a8d71e466",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 470,
+        "y": 820,
+        "wires": [
+            [
+                "2d01f7a50c87975e"
+            ]
+        ]
+    },
+    {
+        "id": "2d01f7a50c87975e",
+        "type": "function",
+        "z": "b538036873358cf0",
+        "name": "function 5",
+        "func": "\nlet p  = msg.payload            || {};\nlet up = p.uplink_message       || {};\nlet set= up.settings            || {};\nlet dr = set.data_rate?.lora    || {};\nlet rx = up.rx_metadata?.[0]    || {};\n\n\nlet device_id        = (p.end_device_ids?.device_id        ?? '').toString();\nlet f_port           = (up.f_port                          ?? '').toString();\nlet frm_payload      = (up.frm_payload                     ?? '').toString();\nlet bandwidth        = (dr.bandwidth                       ?? '').toString();\nlet spreading_factor = (dr.spreading_factor                ?? '').toString();\nlet coding_rate      = (dr.coding_rate                     ?? '').toString();\nlet frequency        = (set.frequency                      ?? '').toString();\nlet dr_timestamp     = (set.timestamp                      ?? '').toString();\nlet dr_time          = (set.time                           ?? '').toString();\nlet airtime          = (up.consumed_airtime                ?? '').toString();\nlet gw_id            = (rx.gateway_ids?.gateway_id         ?? '').toString();\nlet rssi             = (rx.rssi                            ?? '').toString();\nlet channel_rssi     = (rx.channel_rssi                    ?? '').toString();\nlet snr              = (rx.snr                             ?? '').toString();\nlet frequency_offset = (rx.frequency_offset                ?? '').toString();\nlet channel_index    = (rx.channel_index                   ?? '').toString();\nlet qos              = (msg.qos                     ?? '').toString();   // “confirmed” used here as QoS\n\nif (!context.get('header_written')) {\n    const header = [\n        'device_id','f_port','frm_payload',\n        'bandwidth','spreading_factor','coding_rate','frequency',\n        'dr_timestamp','dr_time','airtime',\n        'gw_id','rssi','channel_rssi','snr',\n        'frequency_offset','channel_index','qos'\n    ].join(';') + '\\n';\n    node.send({payload: header});\n    context.set('header_written', true);\n}\n\n\nmsg.payload = [\n    device_id, f_port, frm_payload,\n    bandwidth, spreading_factor, coding_rate, frequency,\n    dr_timestamp, dr_time, airtime,\n    gw_id, rssi, channel_rssi, snr,\n    frequency_offset, channel_index, qos\n].join(';') + '\\n';\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 820,
+        "wires": [
+            [
+                "ffa69b7451e94df0"
+            ]
+        ]
+    },
+    {
+        "id": "ffa69b7451e94df0",
+        "type": "file",
+        "z": "b538036873358cf0",
+        "name": "",
+        "filename": "C:/Users/hp/OneDrive/Metadata/Bureau/data/Node5_LCSE1UP_NLOS.csv",
+        "filenameType": "str",
+        "appendNewline": false,
+        "createDir": false,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 1370,
+        "y": 820,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "683017564ea8b215",
+        "type": "mqtt in",
+        "z": "b538036873358cf0",
+        "name": "",
+        "topic": "v3/datacollect@ttn/devices/noeud6/up",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "b8f07e9a8d71e466",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 470,
+        "y": 880,
+        "wires": [
+            [
+                "1bf74375e327b4e2"
+            ]
+        ]
+    },
+    {
+        "id": "1bf74375e327b4e2",
+        "type": "function",
+        "z": "b538036873358cf0",
+        "name": "function 6",
+        "func": "\nlet p  = msg.payload            || {};\nlet up = p.uplink_message       || {};\nlet set= up.settings            || {};\nlet dr = set.data_rate?.lora    || {};\nlet rx = up.rx_metadata?.[0]    || {};\n\n\nlet device_id        = (p.end_device_ids?.device_id        ?? '').toString();\nlet f_port           = (up.f_port                          ?? '').toString();\nlet frm_payload      = (up.frm_payload                     ?? '').toString();\nlet bandwidth        = (dr.bandwidth                       ?? '').toString();\nlet spreading_factor = (dr.spreading_factor                ?? '').toString();\nlet coding_rate      = (dr.coding_rate                     ?? '').toString();\nlet frequency        = (set.frequency                      ?? '').toString();\nlet dr_timestamp     = (set.timestamp                      ?? '').toString();\nlet dr_time          = (set.time                           ?? '').toString();\nlet airtime          = (up.consumed_airtime                ?? '').toString();\nlet gw_id            = (rx.gateway_ids?.gateway_id         ?? '').toString();\nlet rssi             = (rx.rssi                            ?? '').toString();\nlet channel_rssi     = (rx.channel_rssi                    ?? '').toString();\nlet snr              = (rx.snr                             ?? '').toString();\nlet frequency_offset = (rx.frequency_offset                ?? '').toString();\nlet channel_index    = (rx.channel_index                   ?? '').toString();\nlet qos              = (msg.qos                     ?? '').toString();   // “confirmed” used here as QoS\n\nif (!context.get('header_written')) {\n    const header = [\n        'device_id','f_port','frm_payload',\n        'bandwidth','spreading_factor','coding_rate','frequency',\n        'dr_timestamp','dr_time','airtime',\n        'gw_id','rssi','channel_rssi','snr',\n        'frequency_offset','channel_index','qos'\n    ].join(';') + '\\n';\n    node.send({payload: header});\n    context.set('header_written', true);\n}\n\n\nmsg.payload = [\n    device_id, f_port, frm_payload,\n    bandwidth, spreading_factor, coding_rate, frequency,\n    dr_timestamp, dr_time, airtime,\n    gw_id, rssi, channel_rssi, snr,\n    frequency_offset, channel_index, qos\n].join(';') + '\\n';\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 880,
+        "wires": [
+            [
+                "c5327cc8df1054ee"
+            ]
+        ]
+    },
+    {
+        "id": "c5327cc8df1054ee",
+        "type": "file",
+        "z": "b538036873358cf0",
+        "name": "",
+        "filename": "C:/Users/hp/OneDrive/Metadata/Bureau/data/Node6_LAIUP_NLOS.csv",
+        "filenameType": "str",
+        "appendNewline": false,
+        "createDir": false,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 1360,
+        "y": 880,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8ef97304b76c8f4c",
+        "type": "mqtt in",
+        "z": "b538036873358cf0",
+        "name": "",
+        "topic": "v3/datacollect@ttn/devices/noeud7/up",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "b8f07e9a8d71e466",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 470,
+        "y": 940,
+        "wires": [
+            [
+                "81810d62308f2666"
+            ]
+        ]
+    },
+    {
+        "id": "81810d62308f2666",
+        "type": "function",
+        "z": "b538036873358cf0",
+        "name": "function 7",
+        "func": "\nlet p  = msg.payload            || {};\nlet up = p.uplink_message       || {};\nlet set= up.settings            || {};\nlet dr = set.data_rate?.lora    || {};\nlet rx = up.rx_metadata?.[0]    || {};\n\n\nlet device_id        = (p.end_device_ids?.device_id        ?? '').toString();\nlet f_port           = (up.f_port                          ?? '').toString();\nlet frm_payload      = (up.frm_payload                     ?? '').toString();\nlet bandwidth        = (dr.bandwidth                       ?? '').toString();\nlet spreading_factor = (dr.spreading_factor                ?? '').toString();\nlet coding_rate      = (dr.coding_rate                     ?? '').toString();\nlet frequency        = (set.frequency                      ?? '').toString();\nlet dr_timestamp     = (set.timestamp                      ?? '').toString();\nlet dr_time          = (set.time                           ?? '').toString();\nlet airtime          = (up.consumed_airtime                ?? '').toString();\nlet gw_id            = (rx.gateway_ids?.gateway_id         ?? '').toString();\nlet rssi             = (rx.rssi                            ?? '').toString();\nlet channel_rssi     = (rx.channel_rssi                    ?? '').toString();\nlet snr              = (rx.snr                             ?? '').toString();\nlet frequency_offset = (rx.frequency_offset                ?? '').toString();\nlet channel_index    = (rx.channel_index                   ?? '').toString();\nlet qos              = (msg.qos                     ?? '').toString();   // “confirmed” used here as QoS\n\nif (!context.get('header_written')) {\n    const header = [\n        'device_id','f_port','frm_payload',\n        'bandwidth','spreading_factor','coding_rate','frequency',\n        'dr_timestamp','dr_time','airtime',\n        'gw_id','rssi','channel_rssi','snr',\n        'frequency_offset','channel_index','qos'\n    ].join(';') + '\\n';\n    node.send({payload: header});\n    context.set('header_written', true);\n}\n\n\nmsg.payload = [\n    device_id, f_port, frm_payload,\n    bandwidth, spreading_factor, coding_rate, frequency,\n    dr_timestamp, dr_time, airtime,\n    gw_id, rssi, channel_rssi, snr,\n    frequency_offset, channel_index, qos\n].join(';') + '\\n';\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 940,
+        "wires": [
+            [
+                "b3de0a7f074e4eda"
+            ]
+        ]
+    },
+    {
+        "id": "b3de0a7f074e4eda",
+        "type": "file",
+        "z": "b538036873358cf0",
+        "name": "",
+        "filename": "C:/Users/hp/OneDrive/Metadata/Bureau/data/Node7_LEPEUP_NLOS.csv",
+        "filenameType": "str",
+        "appendNewline": false,
+        "createDir": false,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 1360,
+        "y": 940,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b8f07e9a8d71e466",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "eu1.cloud.thethings.network",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    }
+]
