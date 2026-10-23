@@ -3,7 +3,8 @@
 % SNR-RSSI-Distance scatter plots for the four measurement environments.
 %
 %   (a) Residential            - LOS + NLOS, distances from Table 2
-%   (b) Multi-floor building   - NLOS only,  distances from Table 4
+%   (b) Multi-floor building   - NLOS only,  distances from Table 4, one distance
+%                                per DEPLOYMENT (read from the per-node files)
 %   (c) Research Laboratory    - LOS + NLOS, distances from Table 3
 %   (d) Underground Industrial - Scenario 1 + Scenario 2, distances from Table 5
 %
@@ -23,6 +24,7 @@ clc;
 close all;
 
 DATA_DIR = '../Dataset/By_Environment_and_Condition/';
+NODE_DIR = '../Dataset/By_Environment_and_Node/Nodes_MultiFloorBuilding/';  % panel (b) only
 OUTPUT_DIR = '.';  % where the exported CSV tables are written
 
 fig = figure('Color', 'w', 'Position', [100 100 1200 900]);
@@ -33,7 +35,7 @@ T_residential = plot_residential(DATA_DIR);
 title('(a) Residential environment', 'FontWeight', 'bold');
 
 nexttile;
-T_multifloor = plot_multifloor(DATA_DIR);
+T_multifloor = plot_multifloor(NODE_DIR);
 title('(b) Multi-floor building (NLOS)', 'FontWeight', 'bold');
 
 nexttile;
@@ -54,6 +56,33 @@ writetable(T_underground, fullfile(OUTPUT_DIR, 'correlation_3d_data_underground.
 
 T_all = [T_residential; T_multifloor; T_laboratory; T_underground];
 writetable(T_all, fullfile(OUTPUT_DIR, 'correlation_3d_data_all.csv'));
+
+% === Spearman rank correlations (Table "Spearman" of the paper) ===
+% RSSI (ChannelRSSI_dBm) and SNR versus distance, one row per
+% environment x condition, computed on exactly the points plotted above.
+% n = packets with valid RSSI, SNR and distance.
+envList  = strings(0,1);
+condList = strings(0,1);
+n_pts = zeros(0,1);
+rho_rssi = zeros(0,1);
+rho_snr = zeros(0,1);
+envs = unique(string(T_all.Environment), 'stable');
+for e = 1:numel(envs)
+    inEnv = string(T_all.Environment) == envs(e);
+    conds = unique(string(T_all.Condition(inEnv)), 'stable');
+    for c = 1:numel(conds)
+        m = inEnv & string(T_all.Condition) == conds(c);
+        envList(end+1,1)  = envs(e);                                          %#ok<AGROW>
+        condList(end+1,1) = conds(c);                                         %#ok<AGROW>
+        n_pts(end+1,1)    = sum(m);                                           %#ok<AGROW>
+        rho_rssi(end+1,1) = spearman_rho(T_all.RSSI_dBm(m), T_all.Distance_m(m)); %#ok<AGROW>
+        rho_snr(end+1,1)  = spearman_rho(T_all.SNR_dB(m),   T_all.Distance_m(m)); %#ok<AGROW>
+    end
+end
+Spearman_table = table(envList, condList, n_pts, round(rho_rssi,2), round(rho_snr,2), ...
+    'VariableNames', {'Environment','Condition','n','rho_RSSI_distance','rho_SNR_distance'});
+disp(Spearman_table);
+writetable(Spearman_table, fullfile(OUTPUT_DIR, 'correlation_spearman.csv'));
 
 
 % ============================================================
@@ -217,7 +246,7 @@ function T = plot_laboratory(DATA_DIR)
         dist_LOS(valid_LOS), ...
         36, ...
         dist_LOS(valid_LOS), ...
-        'filled');
+        'o', 'filled');
 
     scatter3( ...
         snr_NLOS(valid_NLOS), ...
@@ -225,7 +254,7 @@ function T = plot_laboratory(DATA_DIR)
         dist_NLOS(valid_NLOS), ...
         36, ...
         dist_NLOS(valid_NLOS), ...
-        'filled');
+        's', 'filled');
 
     % ------------------------------------------------------------
     % Labels
@@ -238,12 +267,14 @@ function T = plot_laboratory(DATA_DIR)
     grid on;
     view(45, 25);
 
-    colorbar;
+    cb = colorbar;
+    cb.Label.String = 'Distance (m)';
 
-    legend( ...
-        'LOS', ...
-        'NLOS', ...
-        'Location', 'best');
+    % Colour encodes distance here, so LOS/NLOS are told apart by marker
+    % shape; the legend uses neutral grey proxies (no colour meaning).
+    hL = scatter3(NaN, NaN, NaN, 36, [0.4 0.4 0.4], 'o', 'filled');
+    hN = scatter3(NaN, NaN, NaN, 36, [0.4 0.4 0.4], 's', 'filled');
+    legend([hL hN], {'LOS', 'NLOS'}, 'Location', 'best');
 
     hold off;
 
@@ -258,65 +289,69 @@ function T = plot_laboratory(DATA_DIR)
 end
 
 
-function T = plot_multifloor(DATA_DIR)
-% Panel (b): Multi-floor building environment (NLOS only), using distances
-% from Table 4.
+function T = plot_multifloor(NODE_DIR)
+% Panel (b): Multi-floor building environment (NLOS only), using the
+% distances of Table 4.
 %
-% Table 4 reports distances by floor and position label (Basement/Ground/
-% First/Second/Third floor, each with Position 1/2/3), while the merged
-% dataset (../data/MultiFloorBuilding_NLOS.csv) identifies nodes by a
-% generic Device_ID ('noeud1'...'noeud6' in this sample; up to 15 in the
-% full dataset). DEVICE_TO_DISTANCE below maps each Device_ID to its
-% corresponding distance and should be kept in sync with the actual
-% floor/position assignment of each node.
+% Table 4 gives one distance per DEPLOYMENT (floor + position), and the
+% same physical hardware was reused across floors (15 deployments, only 6
+% distinct Device_IDs), so a Device_ID alone does not identify a distance.
+% The merged file MultiFloorBuilding_NLOS.csv has no floor/position column,
+% so this panel reads the 15 per-node files, each of which is one
+% deployment, and assigns the Table 4 distance of that deployment to every
+% packet in the file.
+%
+% The per-node files have no header row: columns are read by position
+% (1 = Device_ID, 13 = ChannelRSSI_dBm, 14 = SNR_dB).
 
-    % --- Table 4 distances (meters), for reference ---
-    % Basement:      B1=28,   B2=45.3, B3=48.2
-    % Ground floor:  O1=27,   O2=44.7, O3=47.6
-    % First floor:   F1=26.4, F2=44.3, F3=47.3
-    % Second floor:  S1=26,   S2=44,   S3=47
-    % Third floor:   T1=26.2, T2=44.1, T3=47.1
+    % --- Table 4: file -> node label -> distance (meters) ---
+    files = {'NodeB1_SS_NLOS.csv',     'NodeB2_SS_NLOS.csv',     'NodeB3_SS_NLOS.csv', ...
+             'Node01_RC_NLOS.csv',     'Node02_RC_NLOS.csv',     'Node03_RC_NLOS.csv', ...
+             'Node11_Floor1_NLOS.csv', 'Node12_Floor1_NLOS.csv', 'Node13_Floor1_NLOS.csv', ...
+             'Node21_Floor2_NLOS.csv', 'Node22_Floor2_NLOS.csv', 'Node23_Floor2_NLOS.csv', ...
+             'Node31_Floor3_NLOS.csv', 'Node32_Floor3_NLOS.csv', 'Node33_Floor3_NLOS.csv'};
+    labels = {'B1','B2','B3', '01','02','03', '11','12','13', '21','22','23', '31','32','33'};
+    dists  = [28 45.3 48.2,  27 44.7 47.6,  26.4 44.3 47.3,  26 44 47,  26.2 44.1 47.1];
 
-    DEVICE_TO_DISTANCE = containers.Map( ...
-        {'noeud1', 'noeud2', 'noeud3', 'noeud4', 'noeud5', 'noeud6'}, ...
-        {28,        45.3,     48.2,     27,       44.7,     47.6});
-    % Extend this map with the remaining Table 4 values (26.4, 44.3, 47.3, 26,
-    % 44, 47, 26.2, 44.1, 47.1) for datasets with more than 6 nodes.
+    snr = [];  rssi = [];  dist = [];  ids = strings(0,1);
 
-    data = readtable(fullfile(DATA_DIR, 'MultiFloorBuilding_NLOS.csv'), 'Delimiter', ';');
-    deviceIDs = string(data{:,2});
-    rssi = data{:,13}; % ChannelRSSI_dBm
-    snr = data{:,14};
+    for f = 1:numel(files)
+        data = readtable(fullfile(NODE_DIR, files{f}), ...
+            'Delimiter', ';', 'ReadVariableNames', false, 'TextType', 'string');
+        id_f   = string(data{:,1});
+        rssi_f = data{:,13};   % ChannelRSSI_dBm
+        snr_f  = data{:,14};   % SNR_dB
+        if ~isnumeric(rssi_f), rssi_f = str2double(string(rssi_f)); end
+        if ~isnumeric(snr_f),  snr_f  = str2double(string(snr_f));  end
 
-    dist = nan(height(data), 1);
-    for k = 1:height(data)
-        key = deviceIDs(k);
-        if isKey(DEVICE_TO_DISTANCE, key)
-            dist(k) = DEVICE_TO_DISTANCE(key);
-        end
+        ok = ~isnan(rssi_f) & ~isnan(snr_f);
+        fprintf('[Multi-floor] %-24s node %-3s  %6.1f m  valid samples: %5d of %5d\n', ...
+            files{f}, labels{f}, dists(f), sum(ok), height(data));
+
+        snr  = [snr;  snr_f(ok)];
+        rssi = [rssi; rssi_f(ok)];
+        dist = [dist; repmat(dists(f), sum(ok), 1)];
+        ids  = [ids;  id_f(ok) + "@" + string(labels{f})];
     end
+    fprintf('[Multi-floor] total valid samples: %d\n', numel(snr));
 
-    valid = ~isnan(rssi) & ~isnan(snr) & ~isnan(dist);
-    nSkipped = sum(~valid & ~isnan(rssi) & ~isnan(snr));
-    if nSkipped > 0
-        warning('[Multi-floor] %d rows skipped: Device_ID not found in DEVICE_TO_DISTANCE map.', nSkipped);
-    end
-
-    scatter3(snr(valid), rssi(valid), dist(valid), 36, dist(valid), 'filled');
+    scatter3(snr, rssi, dist, 36, dist, 'filled');
     xlabel('SNR (dB)', 'FontSize', 11);
     ylabel('RSSI (dBm)', 'FontSize', 11); % plotted value is ChannelRSSI_dBm
     zlabel('Distance (m)', 'FontSize', 11);
     grid on;
     view(45, 25);
-    colorbar;
+    cb = colorbar;
+    cb.Label.String = 'Distance (m)';
 
     % --- Export table: the exact points plotted above ---
-    Environment = repmat("MultiFloorBuilding", sum(valid), 1);
-    Condition = repmat("NLOS", sum(valid), 1);
-    DeviceID = deviceIDs(valid);
-    SNR_dB = snr(valid);
-    RSSI_dBm = rssi(valid);
-    Distance_m = dist(valid);
+    % DeviceID is written as <recorded Device_ID>@<Table 4 node label>.
+    Environment = repmat("MultiFloorBuilding", numel(snr), 1);
+    Condition = repmat("NLOS", numel(snr), 1);
+    DeviceID = ids;
+    SNR_dB = snr;
+    RSSI_dBm = rssi;
+    Distance_m = dist;
     T = table(Environment, Condition, DeviceID, SNR_dB, RSSI_dBm, Distance_m);
 end
 
@@ -380,4 +415,26 @@ function T = plot_underground(DATA_DIR)
     RSSI_dBm = [rssi1(valid1); rssi2(valid2)];
     Distance_m = [dist1(valid1); dist2(valid2)];
     T = table(Environment, Condition, DeviceID, SNR_dB, RSSI_dBm, Distance_m);
+end
+
+
+function rho = spearman_rho(x, y)
+% Spearman rank correlation with average ranks for ties (no toolbox needed).
+    R = corrcoef(avg_rank(double(x(:))), avg_rank(double(y(:))));
+    rho = R(1,2);
+end
+
+function r = avg_rank(v)
+    [s, idx] = sort(v);
+    n = numel(v);
+    ranks = zeros(n,1);
+    i = 1;
+    while i <= n
+        j = i;
+        while j < n && s(j+1) == s(i), j = j + 1; end
+        ranks(i:j) = (i + j) / 2;
+        i = j + 1;
+    end
+    r = zeros(n,1);
+    r(idx) = ranks;
 end

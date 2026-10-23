@@ -23,6 +23,12 @@ pipelines**, one per physical node (`noeud1`–`noeud7`):
 [mqtt in: v3/.../devices/noeudN/up] -> [function: parse + format] -> [file: append to CSV]
 ```
 
+**MQTT broker settings** (from the exported `mqtt-broker` node): server
+`eu1.cloud.thethings.network`, port 1883, MQTT protocol version 3.1.1,
+clean session, keep-alive 60 s, subscriptions with QoS 0, no TLS. The
+username and password (the TTN application API key) are not part of the
+exported file and must be entered in the broker node after import.
+
 - **`mqtt in`** — subscribes to the uplink topic for one node
   (`v3/datacollect@ttn/devices/noeudN/up`), receiving the raw JSON uplink
   message published by TTN each time that node's packet is received by the

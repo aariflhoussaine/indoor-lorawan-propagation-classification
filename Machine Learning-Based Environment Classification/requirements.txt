@@ -1,7 +1,10 @@
-pandas>=1.5
-numpy>=1.23
-scikit-learn>=1.2
-matplotlib>=3.6
-xgboost>=1.7
-lightgbm>=3.3
-catboost>=1.1
+# Exact versions used to produce the results reported in the paper
+# (tested with Python 3.13.5)
+numpy==2.4.0
+pandas==2.3.3
+scipy==1.16.3
+scikit-learn==1.7.2
+matplotlib==3.10.6
+xgboost==3.2.0
+lightgbm==4.6.0
+catboost==1.2.10

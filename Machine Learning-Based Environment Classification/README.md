@@ -51,6 +51,11 @@ pip install -r requirements.txt
 jupyter notebook lorawan_ml_classification.ipynb
 ```
 
+`requirements.txt` lists the exact library versions used to produce the results
+reported in the paper; they were run with Python 3.13.5. Other versions may
+work but can change numerical results slightly (particularly for XGBoost,
+LightGBM, CatBoost and t-SNE).
+
 Run all cells top to bottom. Expected runtime is roughly 30–90 minutes on a
 commodity machine, dominated by the GridSearchCV comparison across 18
 classifiers (Step 3) and the per-classifier latency benchmark (Step 8b).
@@ -65,7 +70,8 @@ skipped with a message if not installed.
 
 `RANDOM_STATE = 42` is fixed once near the top of the notebook and reused for
 every stochastic operation (train/test split, cross-validation folds, PCA,
-t-SNE, permutation importance, model initialization), so re-running the
+t-SNE and its 5,000-point subsample, the Shapiro-Wilk subsample, permutation
+importance, model initialization), so re-running the
 notebook reproduces the exact figures reported in the paper.
 
 ## Output

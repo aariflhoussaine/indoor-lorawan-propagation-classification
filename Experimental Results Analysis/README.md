@@ -16,20 +16,32 @@ without duplication.
 | `rssi_boxplot_by_environment.m` | Figure 10 | `Dataset/By_Environment_and_Condition/` | RSSI distribution across environments, conditions and scenarios |
 | `rssi_vs_frequency.m` | Figure 11 | `Dataset/By_Environment_and_Condition/` | Average RSSI per frequency channel, with ±1 SD error bars |
 | `snr_histograms_by_environment.m` | Figure 12 | `Dataset/By_Environment_and_Condition/` | SNR distribution (relative-frequency histograms, 0.25 dB bins) |
-| `correlation_3d.m` | Figure 13 | `Dataset/By_Environment_and_Condition/` | SNR–RSSI–distance 3D scatter plots, one panel per environment |
+| `correlation_3d.m` | Figure 13 and Spearman table | `Dataset/By_Environment_and_Condition/` (panels a, c, d) and `Dataset/By_Environment_and_Node/Nodes_MultiFloorBuilding/` (panel b) | SNR–RSSI–distance 3D scatter plots, one panel per environment; also writes the Spearman rank correlations of RSSI and SNR with distance (`correlation_spearman.csv`) |
 | `CalculPDR.m` | Table 7 | `Dataset/By_Environment_and_Node/` | Per-node Packet Delivery Rate, pooled per environment/condition with 95% Wilson confidence intervals |
 | `wilson_ci.m` | (used by `CalculPDR.m`) | — | Wilson score confidence interval for a binomial proportion (helper function, not run directly) |
 
 ## Data Sources — Two Different Granularities
 
-Four of the six scripts above (`rssi_boxplot_by_environment.m`,
-`rssi_vs_frequency.m`, `snr_histograms_by_environment.m`, `correlation_3d.m`)
-read the **aggregate, per-environment-and-condition** CSV files from
+Three of the six scripts above (`rssi_boxplot_by_environment.m`,
+`rssi_vs_frequency.m`, `snr_histograms_by_environment.m`) and three panels of
+`correlation_3d.m` read the **aggregate, per-environment-and-condition** CSV files from
 [`../Dataset/By_Environment_and_Condition/`](../Dataset/By_Environment_and_Condition/).
 These files contain only successfully received packets and are sufficient
 for RSSI/SNR/frequency/distance analysis.
 
-`CalculPDR.m` is the exception: computing a Packet Delivery Rate requires
+`CalculPDR.m` and panel (b) of `correlation_3d.m` are the exceptions.
+
+**Panel (b) of `correlation_3d.m`** reads the 15 per-node files of the
+multi-floor building. Table 4 gives one distance per *deployment* (floor and
+position), and the same hardware was reused across floors (15 deployments,
+6 distinct `Device_ID`s), so a `Device_ID` does not identify a distance. The
+aggregate file has no floor/position column, so each per-node file is treated
+as one deployment and receives its Table 4 distance (26 to 48.2 m). These files
+have no header row, so columns are read by position
+(13 = `ChannelRSSI_dBm`, 14 = `SNR_dB`); packets with a missing SNR are dropped
+(12,398 of 12,500 packets are plotted).
+
+`CalculPDR.m` computes the PDR: computing a Packet Delivery Rate requires
 knowing every transmission *attempt*, including packets that were never
 received, which is only recoverable from the **per-node** raw files (one CSV
 per physical node, spanning its full transmission timeline) in
@@ -50,7 +62,7 @@ exact plotted values into this same folder.
 run('rssi_boxplot_by_environment.m')
 run('rssi_vs_frequency.m')
 run('snr_histograms_by_environment.m')
-run('correlation_3d.m')
+run('correlation_3d.m')   % also writes correlation_spearman.csv
 run('CalculPDR.m')   % also prints a ready-to-paste LaTeX version of Table 7
 ```
 
@@ -67,6 +79,17 @@ run('CalculPDR.m')   % also prints a ready-to-paste LaTeX version of Table 7
   for the full mapping.
 - Outputs `Table7_PDR_with_CI.csv` in this folder, matching Table 7 of the
   manuscript exactly (Environment, Config, PDR %, 95% CI, Mean PDR %).
+
+## Notes on `correlation_3d.m`
+
+- Colour encodes distance in panels (b) and (c); in panel (c) LOS and NLOS are
+  distinguished by marker shape.
+- Besides the figure, it writes one CSV per panel
+  (`correlation_3d_data_*.csv`, the exact plotted points) and
+  `correlation_spearman.csv`: Spearman rank correlations of RSSI and SNR with
+  distance per environment and condition, computed on those same points
+  (`n` = packets with valid RSSI, SNR and distance). The table printed in the
+  console and the manuscript's Spearman table should match.
 
 ## Known Data Note (RSSI vs. Channel RSSI)
 
