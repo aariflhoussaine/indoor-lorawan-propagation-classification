@@ -38,7 +38,7 @@ Dataset/
 
   **The two folders are two separate recordings of the same measurement
   campaigns, not two views of one file.** The aggregate files were assembled
-  from the gateway-side logs (SNR rounded to 0.1 dB), whereas the per-node
+  from a separate export (SNR rounded to 0.1 dB), whereas the per-node
   files come from the Node-RED export of the network-server messages (full
   numerical precision). Total packet counts per environment agree to within
   one packet, but the two sources are not identical packet by packet: the

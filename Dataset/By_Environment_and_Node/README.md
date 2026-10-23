@@ -9,8 +9,8 @@ node**. Every row is a packet that was received; the number of expected
 transmissions is computed from the first and last timestamps and the fixed
 30-second interval, which is what the PDR calculation requires. These files
 come from the Node-RED export of the network-server messages and are a
-separate recording from the aggregate files (assembled from the gateway-side
-logs): the two agree on total packet counts per environment but not packet
+separate recording from the aggregate files (assembled from a separate
+export): the two agree on total packet counts per environment but not packet
 by packet.
 
 ## Structure
