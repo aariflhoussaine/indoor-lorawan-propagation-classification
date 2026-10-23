@@ -28,17 +28,24 @@ Dataset/
 
 - **[`By_Environment_and_Node/`](By_Environment_and_Node/)** contains one
   CSV per individual physical node (50 files across the four environments),
-  each spanning that node's complete transmission timeline — including
-  transmission attempts that were never received by the gateway. Computing
-  a Packet Delivery Rate requires knowing the total number of attempts, not
-  just the successfully received packets, which is only recoverable at this
-  finer granularity. **Used by:** `CalculPDR.m` only, in
+  each spanning that node's complete transmission timeline. Each row is a
+  received packet; the number of expected transmissions is derived from the
+  node's first and last timestamps and the fixed 30-second interval, so the
+  Packet Delivery Rate (received / expected) can be computed per node.
+  **Used by:** `CalculPDR.m` and panel (b) of `correlation_3d.m` (multi-floor
+  building, one distance per deployment), in
   [`../Experimental Results Analysis/`](../Experimental%20Results%20Analysis/).
 
-  Both of the above describe the same underlying measurement campaign; they
-  are simply two different aggregations of it, kept side by side so that
-  each script reads only the granularity it actually needs, in the format
-  it needs it in, without either script performing its own re-aggregation.
+  **The two folders are two separate recordings of the same measurement
+  campaigns, not two views of one file.** The aggregate files were assembled
+  from the gateway-side logs (SNR rounded to 0.1 dB), whereas the per-node
+  files come from the Node-RED export of the network-server messages (full
+  numerical precision). Total packet counts per environment agree to within
+  one packet, but the two sources are not identical packet by packet: the
+  split between LOS and NLOS conditions and the extreme RSSI/SNR values differ
+  slightly. Each analysis in the paper uses one source consistently (see
+  "Used by" above), and the paper states which. Do not mix the two in a
+  single computation.
 
 - **[`Node-RED_Flows/`](Node-RED_Flows/)** contains the Node-RED flow
   configuration(s) used to collect and format the raw data at the source —

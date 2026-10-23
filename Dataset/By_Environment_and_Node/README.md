@@ -1,12 +1,17 @@
 # By Environment and Node
 
 Raw per-node CSV files, organized in one subfolder per environment, used
-exclusively for the Packet Delivery Rate (PDR) calculation (Table 7 of the
-paper). Unlike the aggregate files in
+for the Packet Delivery Rate (PDR) calculation (Table 7 of the paper) and for
+panel (b) of Fig. 13 (multi-floor building, one distance per deployment). Unlike the aggregate files in
 [`../By_Environment_and_Condition/`](../By_Environment_and_Condition/), each
-file here contains **every transmission attempt from one physical node**,
-including packets that were never received by the gateway — which is what
-PDR calculation requires.
+file here covers **the complete transmission timeline of one physical
+node**. Every row is a packet that was received; the number of expected
+transmissions is computed from the first and last timestamps and the fixed
+30-second interval, which is what the PDR calculation requires. These files
+come from the Node-RED export of the network-server messages and are a
+separate recording from the aggregate files (assembled from the gateway-side
+logs): the two agree on total packet counts per environment but not packet
+by packet.
 
 ## Structure
 
