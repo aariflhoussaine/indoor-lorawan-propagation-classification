@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use this dataset or code, please cite it as below."
+title: "Indoor LoRaWAN multi-environment dataset and analysis code"
+type: dataset
+version: v2.1
+license: CC-BY-4.0
+authors:
+  - family-names: Aarif
+    given-names: "L'houssaine"
+  - family-names: Ahaidous
+    given-names: Khadija
+  - family-names: Tabaa
+    given-names: Mohamed
+  - family-names: Hachimi
+    given-names: Hanaa
+  - family-names: Monteiro
+    given-names: Fabrice
+repository-code: "https://github.com/aariflhoussaine/indoor-lorawan-propagation-classification"
+abstract: "Raw measurement dataset (43,100 LoRaWAN uplink packets, four indoor environments), MATLAB scripts and Python notebook accompanying the paper 'Empirical Characterization and Machine Learning-Based Classification of Indoor LoRaWAN Propagation Environments'."
