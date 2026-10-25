@@ -1,6 +1,6 @@
 # Indoor LoRaWAN Multi-Environment Dataset and Analysis Code
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23605731.svg)](https://doi.org/10.5281/zenodo.23605731)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23647348.svg)](https://doi.org/10.5281/zenodo.23647348)
 
 This repository accompanies the study:
 
@@ -12,8 +12,8 @@ It provides the complete raw dataset and the analysis code used for every figure
 and table in the paper. The measurement campaigns themselves cannot be
 reproduced exactly (see "Scope and Limitations" below).
 
-This version (v2.1) is permanently archived on Zenodo
-(DOI: [10.5281/zenodo.23605731](https://doi.org/10.5281/zenodo.23605731)).
+This version (v2.2) is permanently archived on Zenodo
+(DOI: [10.5281/zenodo.23647348](https://doi.org/10.5281/zenodo.23647348)).
 The DOI [10.5281/zenodo.23599850](https://doi.org/10.5281/zenodo.23599850)
 always resolves to the latest version.
 
