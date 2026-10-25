@@ -1,0 +1,6 @@
+Environment,Average_precision,Prevalence_test
+Multi-floor,0.9808,0.29
+Residential,0.9023,0.2088
+Industrial,0.8799,0.3016
+Laboratory,0.7988,0.1995
+Macro average,0.8905,

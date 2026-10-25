@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: "If you use this dataset or code, please cite it as below."
 title: "Indoor LoRaWAN multi-environment dataset and analysis code"
 type: dataset
-version: v2.1
+version: v2.2
 license: CC-BY-4.0
 authors:
   - family-names: Aarif

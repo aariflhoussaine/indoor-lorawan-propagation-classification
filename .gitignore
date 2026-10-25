@@ -1,2 +1,3 @@
 .ipynb_checkpoints/
 correlation_*.csv
+catboost_info/

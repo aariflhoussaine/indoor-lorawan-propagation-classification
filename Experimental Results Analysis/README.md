@@ -17,7 +17,7 @@ without duplication.
 | `rssi_vs_frequency.m` | Figure 11 | `Dataset/By_Environment_and_Condition/` | Average RSSI per frequency channel, with ±1 SD error bars |
 | `snr_histograms_by_environment.m` | Figure 12 | `Dataset/By_Environment_and_Condition/` | SNR distribution (relative-frequency histograms, 0.25 dB bins) |
 | `correlation_3d.m` | Figure 13 and Spearman table | `Dataset/By_Environment_and_Condition/` (panels a, c, d) and `Dataset/By_Environment_and_Node/Nodes_MultiFloorBuilding/` (panel b) | SNR–RSSI–distance 3D scatter plots, one panel per environment; also writes the Spearman rank correlations of RSSI and SNR with distance (`correlation_spearman.csv`) |
-| `CalculPDR.m` | Table 7 | `Dataset/By_Environment_and_Node/` | Per-node Packet Delivery Rate, pooled per environment/condition with 95% Wilson confidence intervals |
+| `CalculPDR.m` | Table 8 | `Dataset/By_Environment_and_Node/` | Per-node Packet Delivery Rate, pooled per environment/condition with 95% Wilson confidence intervals |
 | `wilson_ci.m` | (used by `CalculPDR.m`) | — | Wilson score confidence interval for a binomial proportion (helper function, not run directly) |
 
 ## Data Sources — Two Different Granularities
@@ -63,7 +63,7 @@ run('rssi_boxplot_by_environment.m')
 run('rssi_vs_frequency.m')
 run('snr_histograms_by_environment.m')
 run('correlation_3d.m')   % also writes correlation_spearman.csv
-run('CalculPDR.m')   % also prints a ready-to-paste LaTeX version of Table 7
+run('CalculPDR.m')   % also prints a ready-to-paste LaTeX version of Table 8
 ```
 
 ## Notes on `CalculPDR.m`
@@ -77,8 +77,18 @@ run('CalculPDR.m')   % also prints a ready-to-paste LaTeX version of Table 7
   comment block at the top of the script and
   [`../Dataset/By_Environment_and_Node/Nodes_UndergroundIndustrial/README.md`](../Dataset/By_Environment_and_Node/Nodes_UndergroundIndustrial/README.md)
   for the full mapping.
-- Outputs `Table7_PDR_with_CI.csv` in this folder, matching Table 7 of the
-  manuscript exactly (Environment, Config, PDR %, 95% CI, Mean PDR %).
+- Outputs `Table7_PDR_with_CI.csv` in this folder, matching Table 8 of the
+  manuscript (Environment, Config, PDR %, 95% CI, Mean PDR %); the file name
+  keeps the numbering of an earlier version of the manuscript.
+- **Definition.** The PDR of a node is the number of received packets divided
+  by the expected number, floor(T / 30 s) + 1, where T is the time between the
+  first and the last packet received from that node. Packets lost before the
+  first or after the last received packet are not counted, so the PDR is the
+  delivery rate within that window and may overestimate the rate over the whole
+  campaign. Counts are pooled per condition, the 95 % Wilson intervals are
+  computed on the pooled counts (they assume independent packets and are
+  therefore optimistic: they are descriptive, not formal tests), and the
+  "Mean PDR" of an environment is the unweighted mean of its condition PDRs.
 
 ## Notes on `correlation_3d.m`
 

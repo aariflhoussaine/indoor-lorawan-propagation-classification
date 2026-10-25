@@ -1,0 +1,19 @@
+Classifier,Family,F1_macro,Median_latency_ms,P95_latency_ms,Training_time_s
+CatBoost,Ensembles,0.8099,0.5555,0.5994,223.5
+XGBoost,Ensembles,0.8089,1.0373,1.4682,316.3
+Random Forest,Ensembles,0.8068,128.3966,143.2815,69.1
+LightGBM,Ensembles,0.8051,1.3577,1.5508,82.0
+Extra Trees,Ensembles,0.8049,213.2545,259.2709,19.0
+KNN,Instance-based,0.8013,35.3748,38.1639,7.6
+Gradient Boosting,Ensembles,0.8008,0.8669,2.3183,559.2
+MLP,Neural Networks,0.8003,0.2042,0.2956,1454.2
+Decision Tree,Trees,0.7552,0.077,0.0863,1.2
+SVM (RBF),Kernel (SVM),0.7232,1.6765,5.18,775.9
+Nu-SVC,Kernel (SVM),0.6863,2.2823,5.9537,1522.1
+SVM (Poly),Kernel (SVM),0.6365,0.7475,2.2268,454.0
+AdaBoost,Ensembles,0.5456,36.8879,77.366,24.0
+SGD Classifier,Linear,0.4636,0.076,0.1967,1.8
+LDA,Linear,0.462,0.0919,0.2015,0.3
+Logistic Regression,Linear,0.4515,0.0833,0.1506,21.4
+QDA,Linear,0.4344,0.1365,0.3709,0.3
+Gaussian NB,Bayesian,0.3954,0.1333,0.4557,0.2

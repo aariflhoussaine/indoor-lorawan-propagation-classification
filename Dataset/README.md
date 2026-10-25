@@ -7,6 +7,7 @@ collection pipeline** used to produce them.
 
 ```
 Dataset/
+├── Board_Mapping.csv               <- Device_ID -> physical board, per environment
 ├── By_Environment_and_Condition/   <- 7 files, one per environment/condition
 ├── By_Environment_and_Node/        <- 50 files, one per physical node
 └── Node-RED_Flows/                 <- Node-RED flow(s) used for data collection
@@ -77,3 +78,37 @@ dynamically adjusted based on link quality. Reported RSSI/SNR/PDR
 statistics therefore reflect network-adapted behavior rather than a
 fixed-parameter propagation characterization. See the paper's Discussion
 (Section 5) for further detail.
+
+## Physical Boards and Node Labels
+
+The same nine physical Heltec boards were used in all four environments.
+Device labels are `Node1`-`Node9` in the residential environment and
+`noeud1`-`noeud7` elsewhere, with `Nodek` corresponding to `noeudk`. The
+physical board is therefore the digit of the label; the correspondence is given
+in [`Board_Mapping.csv`](Board_Mapping.csv) (26 node deployments, 9 boards).
+Because the boards were redeployed, a `Device_ID` alone does not identify a
+position (multi-floor building: 15 deployments, 6 identifiers; underground
+industrial: 14 deployments, 7 identifiers). Environment identity is
+confounded with node placement and recording session.
+
+Recording days (calendar days per environment): residential 3 (2025-07-01 to
+07-03), laboratory 2 (07-02 to 07-03), multi-floor building 3 (07-02 to 07-04),
+underground industrial 1 (07-04). Continuous operation per campaign ranged
+from about 8 to 42 hours.
+
+## Known Limitations of the Collection
+
+* The Node-RED flow is provided for the underground industrial environment
+  only; the flows of the other three environments were not archived, and the
+  TTN application API key used by the MQTT broker is not part of the export.
+* The per-campaign The Things Stack release, the ADR convergence, collision
+  counts, ambient temperature and humidity were not recorded, and the antenna
+  gain of the nodes is unspecified. No independent RF calibration was
+  performed.
+* Continuous operation at one packet every 30 s exceeds the fair-use guideline
+  of the TTN community network (30 s of uplink airtime per device and day:
+  about 135 s with SF7 and 267 s with SF8 per day), while respecting the
+  regulatory 1 % duty-cycle limit (maximum observed 0.31 %).
+* Only the packets received by the gateway are recorded; the PDR is computed
+  within the window delimited by the first and last received packet of each
+  node (see the Experimental Results Analysis README).

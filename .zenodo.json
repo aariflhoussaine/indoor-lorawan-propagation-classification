@@ -1,5 +1,6 @@
 {
-  "title": "Indoor LoRaWAN multi-environment dataset and analysis code (v2.1)",
+  "title": "Indoor LoRaWAN multi-environment dataset and analysis code (v2.2)",
+  "version": "v2.2",
   "upload_type": "dataset",
   "description": "Raw measurement dataset (43,100 LoRaWAN uplink packets, four indoor environments: residential apartment, research laboratory, multi-floor building, underground industrial facility), MATLAB scripts for the radio link characterization, and the Python notebook for the machine learning classification, accompanying the paper \"Empirical Characterization and Machine Learning-Based Classification of Indoor LoRaWAN Propagation Environments\" (Discover Internet of Things).",
   "creators": [

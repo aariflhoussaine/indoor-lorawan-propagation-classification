@@ -1,0 +1,3 @@
+Metric,ANOVA_F,ANOVA_p,KruskalWallis_H,KruskalWallis_p,All_groups_normal_ShapiroWilk,N_groups
+RSSI,14918.71,0.0,20848.56,0.0,False,4
+SNR,6239.29,0.0,13418.24,0.0,False,4

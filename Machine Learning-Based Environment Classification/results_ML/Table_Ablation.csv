@@ -1,0 +1,11 @@
+Removed_feature,F1_macro,F1_drop,Delta_F1
+freq_offset,0.6453,0.1646,-0.1646
+freq_mhz,0.7594,0.0505,-0.0505
+snr,0.7948,0.0151,-0.0151
+rssi,0.8,0.0099,-0.0099
+airtime_ms,0.8052,0.0047,-0.0047
+(none -- full model),0.8099,0.0,0.0
+rssi_delta,0.8099,0.0,0.0
+sf,0.8109,-0.001,0.001
+rssi_snr_ratio,0.8112,-0.0013,0.0013
+snr_positive,0.8113,-0.0014,0.0014

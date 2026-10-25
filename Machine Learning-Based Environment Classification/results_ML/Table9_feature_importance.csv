@@ -1,0 +1,10 @@
+feature,importance,std
+rssi,0.3398,0.0043
+freq_offset,0.2855,0.0041
+snr,0.1562,0.0035
+freq_mhz,0.1544,0.0029
+rssi_snr_ratio,0.1119,0.0031
+airtime_ms,0.0098,0.0009
+snr_positive,0.004,0.0009
+sf,0.0,0.0
+rssi_delta,0.0,0.0

@@ -1,0 +1,4 @@
+Representation,Silhouette,Davies-Bouldin
+Full feature space (9D),-0.095,5.325
+PCA (2D),-0.165,4.352
+t-SNE (2D),-0.002,40.872

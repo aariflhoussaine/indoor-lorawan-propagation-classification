@@ -1,0 +1,7 @@
+Validation protocol,n_groups,Accuracy,Accuracy_std,F1_macro,F1_macro_std
+"Stratified 5-fold, packet-level (nested)",,0.8188,0.0025,0.8099,0.0028
+"GroupKFold(5), group = environment + Device_ID",26.0,0.2231,0.0292,0.2833,0.082
+"StratifiedGroupKFold(4), group = environment + Device_ID",26.0,0.2819,0.0643,0.329,0.1007
+"StratifiedGroupKFold(4), group = Device_ID only (same label = same board)",16.0,0.2464,0.0658,0.2252,0.0612
+"GroupKFold(5), group = physical board (BOARD_MAP, 9 boards)",9.0,0.2642,0.0599,0.3711,0.0779
+"StratifiedGroupKFold(4), group = physical board (BOARD_MAP)",9.0,0.2703,0.0488,0.3173,0.0908

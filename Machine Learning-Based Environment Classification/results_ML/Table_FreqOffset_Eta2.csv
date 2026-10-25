@@ -1,0 +1,4 @@
+Grouping,n_groups,eta_squared
+physical board (9),9,0.644
+deployment = environment + Device_ID (26),26,0.815
+environment (4),4,0.018

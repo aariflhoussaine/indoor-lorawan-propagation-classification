@@ -1,0 +1,5 @@
+environment,First_day,Last_day,N_distinct_days
+Industrial,2025-07-04,2025-07-04,1
+Laboratory,2025-07-02,2025-07-03,2
+Multi-floor,2025-07-02,2025-07-04,3
+Residential,2025-07-01,2025-07-03,3

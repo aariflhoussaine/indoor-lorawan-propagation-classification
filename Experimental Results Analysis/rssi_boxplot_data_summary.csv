@@ -1,0 +1,8 @@
+Environment,Condition,N,Median,Q1,Q3,WhiskerLow,WhiskerHigh,NOutliers
+Residential environment,LOS,3181,-51,-62,-43,-87,-18,0
+Residential environment,NLOS,5819,-63,-70,-55,-92,-33,112
+Multi-floor building,NLOS,12500,-101,-105.5,-91,-124,-70,175
+Research laboratory,LOS,4364,-57,-64,-50,-80,-30,0
+Research laboratory,NLOS,4236,-59,-62,-48,-74,-37,0
+Underground industrial,Scenario 1,6685,-83,-104,-62,-129,-29,0
+Underground industrial,Scenario 2,6315,-63,-83,-55,-125,-31,2
